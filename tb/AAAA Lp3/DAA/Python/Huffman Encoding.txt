@@ -1,0 +1,70 @@
+import heapq
+from collections import defaultdict
+
+class HuffmanNode:
+    def __init__(self, data, frequency):
+        self.data = data                  # Input character
+        self.frequency = frequency         # Frequency of the character
+        self.left = None                   # Left child
+        self.right = None                  # Right child
+
+    # Comparator method for priority queue (min-heap)
+    def __lt__(self, other):
+        return self.frequency < other.frequency
+
+def print_codes(root, code, huffman_codes):
+    if not root:
+        return
+
+    # If this node is a leaf node, it contains a character
+    if not root.left and not root.right:
+        huffman_codes[root.data] = code
+        print(f"{root.data}: {code}")
+
+    # Traverse left and right subtrees
+    print_codes(root.left, code + "0", huffman_codes)
+    print_codes(root.right, code + "1", huffman_codes)
+
+def build_huffman_tree(text):
+    # Count the frequency of each character
+    frequency_map = defaultdict(int)
+    for ch in text:
+        frequency_map[ch] += 1
+
+    # Create a priority queue (min-heap)
+    priority_queue = [HuffmanNode(data, freq) for data, freq in frequency_map.items()]
+    heapq.heapify(priority_queue)
+
+    # Iterate until there is only one node left in the priority queue
+    while len(priority_queue) > 1:
+        # Remove two nodes of the highest priority (lowest frequency)
+        left = heapq.heappop(priority_queue)
+        right = heapq.heappop(priority_queue)
+
+        # Create a new internal node with frequency equal to the sum of the two nodes' frequencies
+        new_node = HuffmanNode(None, left.frequency + right.frequency)
+        new_node.left = left
+        new_node.right = right
+
+        # Add the new node to the priority queue
+        heapq.heappush(priority_queue, new_node)
+
+    # The remaining node is the root of the Huffman tree
+    root = priority_queue[0]
+
+    # Traverse the Huffman tree and store the codes in a dictionary
+    huffman_codes = {}
+    print("Huffman Codes for each character:")
+    print_codes(root, "", huffman_codes)
+
+    # Print the encoded string
+    print("\nEncoded string: ", end="")
+    encoded_string = ''.join(huffman_codes[ch] for ch in text)
+    print(encoded_string)
+
+def main():
+    text = input("Enter text to encode using Huffman Encoding: ")
+    build_huffman_tree(text)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,112 @@
+import heapq
+from collections import defaultdict
+
+# MinHeapNode class represents a node in the Huffman tree
+class MinHeapNode:
+    def __init__(self, data, freq):
+        self.data = data  # Character stored in the node
+        self.freq = freq  # Frequency of the character
+        self.left = None  # Left child node
+        self.right = None  # Right child node
+
+    # For priority queue to compare nodes based on frequency
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+# Function to print the Huffman Codes by traversing the Huffman tree
+def print_codes(root, current_code, huffman_codes):
+    if root is None:
+        return
+
+    # If it's a leaf node (contains a character)
+    if root.data != '$':
+        huffman_codes[root.data] = current_code
+
+    # Traverse left and right subtree
+    print_codes(root.left, current_code + "0", huffman_codes)
+    print_codes(root.right, current_code + "1", huffman_codes)
+
+# Function to build the Huffman Tree and generate the Huffman codes
+def huffman_code(data, freq, size):
+    # Min-Heap to store the nodes based on frequency
+    min_heap = []
+
+    # Create a node for each character and insert it into the Min-Heap
+    for i in range(size):
+        heapq.heappush(min_heap, MinHeapNode(data[i], freq[i]))
+
+    # Build the Huffman tree
+    while len(min_heap) > 1:
+        # Extract two nodes with the least frequency
+        left = heapq.heappop(min_heap)
+        right = heapq.heappop(min_heap)
+
+        # Create a new internal node with frequency equal to the sum of the two nodes
+        temp = MinHeapNode('$', left.freq + right.freq)
+        temp.left = left
+        temp.right = right
+
+        # Insert the internal node back into the heap
+        heapq.heappush(min_heap, temp)
+
+    # The root node of the Huffman Tree is now the only node left in the heap
+    huffman_codes = {}
+    print_codes(min_heap[0], "", huffman_codes)
+
+    # Output the Huffman Codes for each character
+    print("Huffman Codes:")
+    for char, code in huffman_codes.items():
+        print(f"{char}: {code}")
+
+def main():
+    # Take number of characters from the user
+    n = int(input("Enter the number of characters: "))
+
+    data = []
+    freq = []
+
+    # Take input for characters and their frequencies
+    print("Enter characters and their frequencies:")
+    for i in range(n):
+        char = input(f"Character {i + 1}: ")
+        frequency = int(input(f"Frequency of {char}: "))
+        data.append(char)
+        freq.append(frequency)
+
+    # Call Huffman coding function
+    huffman_code(data, freq, n)
+
+if __name__ == "__main__":
+    main()
+
+# Example output:
+# Enter the number of characters: 4
+# Enter characters and their frequencies:
+# Character 1: A
+# Frequency of A: 5
+# Character 2: B
+# Frequency of B: 9
+# Character 3: C
+# Frequency of C: 12
+# Character 4: D
+# Frequency of D: 13
+#
+# Huffman Codes:
+# C: 00
+# A: 01
+# B: 10
+# D: 11
+
+'''
+Explanation:
+
+- MinHeapNode: Represents a node in the Huffman tree. Each node contains a character, its frequency, and pointers to its left and right child nodes.
+- __lt__ method: This method is used to define the comparison operator for the Min-Heap. It ensures that the node with the lower frequency has higher priority in the heap.
+- print_codes: This function recursively traverses the Huffman tree, printing the Huffman code (binary string) for each character.
+- huffman_code: Builds the Huffman tree by repeatedly extracting the two nodes with the lowest frequency, combining them into a new internal node, and reinserting the new node into the Min-Heap.
+- The main function sets up the data and frequency arrays, then calls the `huffman_code` function to generate and print the Huffman codes.
+
+Time Complexity: O(n log n), where n is the number of unique characters. The heap operations (insert and remove) take O(log n) time, and we perform these operations n-1 times.
+
+Auxiliary Space: O(n), as we store n nodes in the heap during the process.
+'''

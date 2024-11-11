@@ -1,0 +1,56 @@
+def knapsack(capacity, items, prices, weights):
+    # Create a DP table to store the maximum profit for each subproblem
+    dp = [[0] * (capacity + 1) for _ in range(items + 1)]
+
+    # Fill the DP table
+    for i in range(1, items + 1):
+        for w in range(capacity + 1):
+            if weights[i - 1] <= w:
+                # If the current item's weight is less than or equal to the remaining capacity
+                dp[i][w] = max(dp[i - 1][w], prices[i - 1] + dp[i - 1][w - weights[i - 1]])
+            else:
+                # Else, we cannot include the current item
+                dp[i][w] = dp[i - 1][w]
+
+    # Return the maximum profit that can be earned
+    return dp[items][capacity]
+
+
+def main():
+    # Take the number of items and capacity as input
+    capacity = int(input("Enter the capacity of the knapsack: "))
+    items = int(input("Enter the number of items: "))
+
+    # Arrays to store prices and weights of the items
+    prices = []
+    weights = []
+
+    # Input the value and weight for each item
+    for i in range(items):
+        price, weight = map(int, input(f"Enter value and weight for item {i + 1}: ").split())
+        prices.append(price)
+        weights.append(weight)
+
+    # Call the knapsack function and output the result
+    max_profit = knapsack(capacity, items, prices, weights)
+    print(f"Maximum Profit Earned: {max_profit}")
+
+
+if __name__ == "__main__":
+    main()
+
+# 0/1 Knapsack:
+# Time Complexity: O(N * W), where 'N' is the number of items and 'W' is the knapsack capacity. 
+# For each item, we traverse through all weight capacities 1 <= w <= W. This results in a time complexity of O(N * W).
+# 
+# Auxiliary Space: O(N * W). 
+# The space complexity is due to the use of a 2D array `dp` of size N * W, where N is the number of items and W is the knapsack capacity.
+
+# Example:
+# Enter the capacity of the knapsack: 10
+# Enter the number of items: 4
+# Enter value and weight for item 1: 3 2
+# Enter value and weight for item 2: 7 2
+# Enter value and weight for item 3: 2 4
+# Enter value and weight for item 4: 9 5
+# Maximum Profit Earned: 12

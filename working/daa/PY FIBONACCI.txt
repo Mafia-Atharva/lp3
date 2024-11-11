@@ -1,0 +1,63 @@
+# Global variable to count recursive steps
+recursive_step_count = 0
+
+# Recursive Fibonacci function with step count
+def fibonacci_recursive(n):
+    global recursive_step_count
+    recursive_step_count += 1  # Increment step count for each function call
+    
+    # Base cases
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    
+    # Recursive calls
+    return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+# Iterative Fibonacci function with step count
+def fibonacci_iterative(n):
+    iterative_step_count = 0
+    a, b = 0, 1
+    
+    # Direct return for first two values
+    if n == 0:
+        iterative_step_count += 1  # Increment for the initial step
+        return 0, iterative_step_count
+    if n == 1:
+        iterative_step_count += 1  # Increment for the initial step
+        return 1, iterative_step_count
+
+    # Iteratively calculate Fibonacci number and count steps
+    for i in range(2, n + 1):
+        iterative_step_count += 1  # Increment for each loop iteration
+        a, b = b, a + b
+
+    return b, iterative_step_count
+
+def main():
+    n = int(input("Enter the Fibonacci term to calculate: "))
+
+    # Calculate Fibonacci using recursion
+    global recursive_step_count
+    recursive_step_count = 0  # Reset recursive step count
+    fibonacci_value_recursive = fibonacci_recursive(n)
+
+    # Calculate Fibonacci using iteration
+    fibonacci_value_iterative, iterative_step_count = fibonacci_iterative(n)
+
+    # Output results
+    print(f"Fibonacci Value (Recursive): {fibonacci_value_recursive}")
+    print(f"Fibonacci Value (Iterative): {fibonacci_value_iterative}")
+    print(f"Steps required using Recursion: {recursive_step_count}")
+    print(f"Steps required using Iteration: {iterative_step_count}")
+
+if __name__ == "__main__":
+    main()
+
+# Example Output:
+# Enter the Fibonacci term to calculate: 6
+# Fibonacci Value (Recursive): 8
+# Fibonacci Value (Iterative): 8
+# Steps required using Recursion: 21
+# Steps required using Iteration: 6

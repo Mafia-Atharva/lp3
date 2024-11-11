@@ -1,0 +1,54 @@
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+def recursive(n):
+    """ Recursive Fibonacci Sequence
+        Time Complexity: O(2^n)
+        Space Complexity: O(n)
+    """
+    for i in range(n):
+        print(fibonacci(i), end=" ")
+    print()
+
+def iterative(n):
+    """ Iterative Fibonacci Sequence
+        Time Complexity: O(n)
+        Space Complexity: O(1)
+    """
+    if n <= 0:
+        return
+    a1, a2 = 0, 1
+    print(a1, end=" ")
+    if n > 1:
+        print(a2, end=" ")
+    for _ in range(2, n):
+        a3 = a2 + a1
+        a1, a2 = a2, a3
+        print(a2, end=" ")
+    print()
+
+def main():
+    print("Welcome to the Fibonacci Sequence Generator!")
+    n = int(input("Enter the number of terms you'd like to generate: "))
+
+    if n < 1:
+        print("Please enter a positive integer greater than 0.")
+        return
+
+    choice = input("Choose the method to generate the Fibonacci sequence:\n"
+                   "Enter 'R' for Recursive or 'I' for Iterative: ")
+
+    print("\nFibonacci Sequence:")
+    if choice.lower() == 'r':
+        recursive(n)
+    elif choice.lower() == 'i':
+        iterative(n)
+    else:
+        print("Invalid choice. Please enter 'R' or 'I'.")
+
+    print("Thank you for using the Fibonacci Sequence Generator!")
+
+if __name__ == "__main__":
+    main()

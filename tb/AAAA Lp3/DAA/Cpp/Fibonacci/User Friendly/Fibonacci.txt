@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+int fibonacci(int n) {
+  if (n <= 1)
+    return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+/**
+ * Recursive Fibonacci Sequence
+ * Time Complexity: O(2^n)
+ * Space Complexity: O(n)
+ */
+void recursive(int n) {
+  for (int i = 0; i < n; ++i)
+    cout << fibonacci(i) << " ";
+  cout << endl;
+}
+
+/**
+ * Iterative Fibonacci Sequence
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */
+void iterative(int n) {
+  if (n <= 0) return;
+  int a1 = 0;
+  int a2 = 1;
+
+  cout << a1 << " ";
+  if (n > 1) cout << a2 << " ";
+
+  for (int i = 2; i < n; i++) {
+    int a3 = a2 + a1;
+    a1 = a2;
+    a2 = a3;
+    cout << a2 << " ";
+  }
+
+  cout << endl;
+}
+
+int main() {
+  int n;
+  char choice;
+
+  cout << "Welcome to the Fibonacci Sequence Generator!" << endl;
+  cout << "Enter the number of terms you'd like to generate: ";
+  cin >> n;
+
+  if (n < 1) {
+    cout << "Please enter a positive integer greater than 0." << endl;
+    return 1;
+  }
+
+  cout << "Choose the method to generate the Fibonacci sequence:" << endl;
+  cout << "Enter 'R' for Recursive or 'I' for Iterative: ";
+  cin >> choice;
+
+  cout << "\nFibonacci Sequence:" << endl;
+  if (choice == 'R' || choice == 'r') {
+    recursive(n);
+  } else if (choice == 'I' || choice == 'i') {
+    iterative(n);
+  } else {
+    cout << "Invalid choice. Please enter 'R' or 'I'." << endl;
+  }
+
+  cout << "Thank you for using the Fibonacci Sequence Generator!" << endl;
+  return 0;
+}

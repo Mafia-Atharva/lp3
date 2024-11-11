@@ -1,0 +1,42 @@
+class Item:
+    def __init__(self, weight, value):
+        self.weight = weight
+        self.value = value
+
+def knapsack(W, items):
+    n = len(items)
+    dp = [[0] * (W + 1) for _ in range(n + 1)]
+
+    for i in range(1, n + 1):
+        for w in range(1, W + 1):
+            if items[i - 1].weight <= w:
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - items[i - 1].weight] + items[i - 1].value)
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    return dp[n][W]
+
+def main():
+    print("Welcome to the Knapsack Problem Solver!")
+    
+    # Knapsack capacity input
+    W = int(input("Enter the capacity of the knapsack: "))
+    
+    # Number of items input
+    n = int(input("Enter the number of items: "))
+
+    # Item details input
+    items = []
+    print("Please enter the weight and value of each item:")
+    for i in range(n):
+        weight = int(input(f"Item {i + 1} - Weight: "))
+        value = int(input(f"Item {i + 1} - Value: "))
+        items.append(Item(weight, value))
+
+    # Calculate and print maximum value
+    max_value = knapsack(W, items)
+    print(f"\nMaximum value that can be obtained: {max_value}")
+    print("Thank you for using the Knapsack Problem Solver!")
+
+if __name__ == "__main__":
+    main()

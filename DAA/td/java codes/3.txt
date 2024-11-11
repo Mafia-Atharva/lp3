@@ -1,0 +1,75 @@
+import java.util.Scanner;
+
+public class FractionalKnapsack {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter the number of items: ");
+        int n = scanner.nextInt();
+        
+        String[] names = new String[n];
+        double[] weights = new double[n];
+        double[] values = new double[n];
+        
+        for (int i = 0; i < n; i++) {
+            scanner.nextLine(); // Consume newline
+            System.out.print("Enter the name, weight, and value of item " + (i + 1) + ": ");
+            names[i] = scanner.nextLine();
+            weights[i] = scanner.nextDouble();
+            values[i] = scanner.nextDouble();
+        }
+        
+        System.out.print("Enter the maximum capacity of the knapsack: ");
+        double capacity = scanner.nextDouble();
+        
+        double[] ratios = new double[n];
+        for (int i = 0; i < n; i++) {
+            ratios[i] = values[i] / weights[i];
+        }
+        
+        // Sort items by value-to-weight ratio in descending order
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (ratios[j] < ratios[j + 1]) {
+                    double tempRatio = ratios[j];
+                    ratios[j] = ratios[j + 1];
+                    ratios[j + 1] = tempRatio;
+                    
+                    double tempWeight = weights[j];
+                    weights[j] = weights[j + 1];
+                    weights[j + 1] = tempWeight;
+                    
+                    double tempValue = values[j];
+                    values[j] = values[j + 1];
+                    values[j + 1] = tempValue;
+                    
+                    String tempName = names[j];
+                    names[j] = names[j + 1];
+                    names[j + 1] = tempName;
+                }
+            }
+        }
+        
+        double totalValue = 0.0;
+        double remainingCapacity = capacity;
+        
+        System.out.println("\nItems selected for the knapsack:");
+        
+        for (int i = 0; i < n; i++) {
+            if (weights[i] <= remainingCapacity) {
+                System.out.println(names[i] + " (100%)");
+                totalValue += values[i];
+                remainingCapacity -= weights[i];
+            } else {
+                double fraction = remainingCapacity / weights[i];
+                System.out.println(names[i] + " (" + (fraction * 100) + "%)");
+                totalValue += (fraction * values[i]);
+                break;
+            }
+        }
+        
+        System.out.println("\nMaximum value achievable: " + totalValue);
+        
+        scanner.close();
+    }
+}

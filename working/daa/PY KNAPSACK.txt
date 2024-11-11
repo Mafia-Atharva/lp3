@@ -1,0 +1,76 @@
+# Item class to store value and weight of each item
+class Item:
+    def __init__(self, value, weight):
+        self.value = value
+        self.weight = weight
+
+    # Method to calculate the value-to-weight ratio
+    def value_to_weight_ratio(self):
+        return self.value / self.weight
+
+
+def main():
+    # Input number of items
+    n = int(input("Enter the number of items: "))
+
+    items = []
+
+    # Input value and weight of each item
+    for i in range(n):
+        value, weight = map(int, input(f"Enter value and weight of item {i + 1}: ").split())
+        items.append(Item(value, weight))
+
+    # Input the total weight capacity of the knapsack
+    capacity = int(input("Enter the maximum capacity of the knapsack: "))
+
+    # Sort items by their value-to-weight ratio in descending order
+    items.sort(key=lambda x: x.value_to_weight_ratio(), reverse=True)
+
+    max_value = 0.0  # Initialize the total maximum value that can be obtained
+
+    # Loop through each item
+    for item in items:
+        if capacity >= item.weight:
+            # If the knapsack can carry the entire item weight
+            max_value += item.value  # Add the full item value
+            capacity -= item.weight  # Decrease knapsack capacity by item's weight
+        else:
+            # If the knapsack cannot carry the entire item weight, take fraction
+            value_per_weight = item.value_to_weight_ratio()  # Value-to-weight ratio
+            max_value += value_per_weight * capacity  # Add fraction of the item's value
+            capacity = 0  # Knapsack is full
+            break  # No more items can be added
+
+    # Output the maximum value obtained
+    print(f"Maximum value that can be obtained in the knapsack: {max_value:.2f}")
+
+
+if __name__ == "__main__":
+    main()
+
+# Example output:
+# Enter the number of items: 4
+# Enter value and weight of item 1: 60 10
+# Enter value and weight of item 2: 100 20
+# Enter value and weight of item 3: 120 30
+# Enter value and weight of item 4: 90 25
+# Enter the maximum capacity of the knapsack: 50
+#
+# After sorting items by value-to-weight ratio in descending order:
+# Item 1: Value = 60, Weight = 10 (Ratio = 6.0)
+# Item 2: Value = 100, Weight = 20 (Ratio = 5.0)
+# Item 3: Value = 120, Weight = 30 (Ratio = 4.0)
+# Item 4: Value = 90, Weight = 25 (Ratio = 3.6)
+#
+# Knapsack process:
+# - Add Item 1 (Value = 60, Weight = 10) fully to the knapsack
+# - Remaining capacity = 50 - 10 = 40, Total value = 60
+# - Add Item 2 (Value = 100, Weight = 20) fully to the knapsack
+# - Remaining capacity = 40 - 20 = 20, Total value = 160
+# - Take fraction of Item 3 (Value = 120, Weight = 30)
+# - Fraction of Item 3 = (Value-to-weight ratio) * Remaining capacity = 4.0 * 20 = 80
+# - Remaining capacity = 0, Total value = 160 + 80 = 240
+# - Item 4 is not considered as the knapsack is full.
+#
+# Output:
+# Maximum value that can be obtained in the knapsack: 240.00
